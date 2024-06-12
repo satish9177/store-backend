@@ -1,0 +1,25 @@
+const mongoose=require('mongoose')
+const productSchema=new mongoose.Schema({
+  ProductName:{
+    type:String,
+    require:true
+  },
+  price:{
+    type:String,
+    require:true
+  },
+  category:{
+    type:[{
+    type:String,
+    enum:["veg","non-veg"]
+  }] },
+  image:String,
+  bestseller:String,
+  description:String,
+  firm:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Firm'
+  }]
+})
+const Product=mongoose.model('Product',productSchema)
+module.exports=Product
