@@ -4,7 +4,7 @@ const multer=require('multer')
 const Path=require('path') 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // specify the destination folder where the uploaded files will be stored
+    cb(null, 'upload/'); // specify the destination folder where the uploaded files will be stored
   },
   filename: function (req, file, cb) {
     cb(null, Date.now()+Path.extname( file.originalname)); // generate unique filename for uploaded file
@@ -17,10 +17,11 @@ const addproduct=async (req,res)=>{
        const {ProductName, price, category, bestseller, description}=req.body;
        const firmId=req.params.firmId;
       //  console.log(firmId)
+      const image = req.file ? req.file.filename : undefined;
        const firm=await Firm.findById(firmId);
           // console.log(firm)
        if(!firm) return res.status(400).json({message:"firm not found"})
-        const newproduct=await Product({ProductName, price, category, bestseller, description,firm:firmId});
+        const newproduct=await Product({ProductName, price, category, bestseller, description,image,firm:firmId});
         const add= await newproduct.save()
           firm.product.push(add);
         await firm.save();
@@ -29,7 +30,6 @@ const addproduct=async (req,res)=>{
       res.status(404).json({error:"not found"})
     }
 }
-
 const getproductbyId= async (req,res)=>{
   try {  
         const productId=req.params.productId;

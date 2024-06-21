@@ -6,9 +6,9 @@ router.route('/addproduct/:firmId').post(addproduct)
 router.route('/getproductbyId/:productId').get(getproductbyId)
 router.route('/getproductbyId/:productId').delete(deleteproductbyId)
 router.route('/getproductbyfirm/:firmId').get(getproductbyFirm)
-router.route('/upload/:images').get(async (req,res)=>{
+router.route('/upload/:imageName').get(async (req,res)=>{
   const imageName=req.params.imageName
-  res.headersSent('content-Type','image/jpeg')
+  res.header('Content-Type','image/jpeg')
   res.sendFile(path.join(__dirname,'..','upload',imageName))
 })
 module.exports=router

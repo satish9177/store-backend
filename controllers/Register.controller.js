@@ -26,7 +26,7 @@ const Login=async (req,res)=>{
     if(!user ) return res.status(400).json({message:"user not found"})
     if(!(await bcrypt.compare(password,user.password)))  return res.status(400).json({message:"password wrong"})
     const token=await jwt.sign({userId:user._id},process.env.SECRETKEY,{expiresIn:"1h"})
-     res.status(200).json({Success:"successfully login",token})   
+     res.status(200).json({Success:"successfully login",token,userId:user._id})   
   }catch(err){
     console.log(err)
   }
@@ -36,7 +36,7 @@ const getAlluser=async (req,res)=>{
     // console.log("--1");
     const user=await User.find().populate('firm')
     // if(!user) return json.status(400).json({message:user})
-    console.log(user);
+    // console.log(user);
     res.status(200).json({user})
   }catch(err){
     res.status(404).json({error:"not user found"})
@@ -45,11 +45,12 @@ const getAlluser=async (req,res)=>{
 const getuserbyId=async (req,res)=>{
   try{
   const userId=req.params.id;
-  const userbyid=await User.findById(userId)
+  const userbyid=await User.findById(userId).populate('firm')
   if(!userbyid) return res.status(400).json({message:"user not found by this Id"})
-    res.status(201).json({userbyid})
+    res.status(201).json(userbyid)
   }catch(err){
     res.status(404).json({error:"invalid user"})
   }
 }
+
 module.exports={Register,Login,getAlluser,getuserbyId};
